@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biryani House</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@google/generative-ai/dist/index.min.js"></script>
+
 </head>
 <body>
     <header>
@@ -467,6 +469,16 @@
         window.location.href = `qr.html?total=${parseFloat(totalAmount).toFixed(2)}`;
     });
 </script>
+<!-- Chatbot Window -->
+<div id="chatbot" style="display: none;">
+  <div id="chatbot-header">
+    <span>ChefBot 🤖🍲</span>
+    <button id="close-chatbot">✖</button>
+  </div>
+  <div id="chatbot-messages"></div>
+  <input type="text" id="chatbot-input" placeholder="Ask me about dishes...">
+  <button id="send-chat">Send</button>
+</div>
 
 <script>
         const dishes = [
@@ -527,6 +539,71 @@
             displayDish();
         });
     </script>
+    <script type="module">
+  import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+  const robot = document.getElementById("robot");
+  const chatbot = document.getElementById("chatbot");
+  const closeChatbot = document.getElementById("close-chatbot");
+  const sendBtn = document.getElementById("send-chat");
+  const input = document.getElementById("chatbot-input");
+  const messages = document.getElementById("chatbot-messages");
+
+  // ✅ Initialize Gemini API
+  const API_KEY = "AIzaSyBs6ggTY_bZwqyZTv58pEIflDiBdi0oprI"; // Replace with your Gemini API key
+  const genAI = new GoogleGenerativeAI(API_KEY);
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+  // Chat history
+  let chatSession = await model.startChat({ history: [] });
+
+  // Show chatbot
+  robot.addEventListener("click", () => {
+    chatbot.style.display = "flex";
+  });
+
+  // Close chatbot
+  closeChatbot.addEventListener("click", () => {
+    chatbot.style.display = "none";
+  });
+
+  // Add messages to chat window
+  function addMessage(text, sender) {
+    const msg = document.createElement("div");
+    msg.className = sender === "user" ? "user-message" : "bot-message";
+    msg.innerText = text;
+    messages.appendChild(msg);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  // Handle send button
+  sendBtn.addEventListener("click", async () => {
+    const userText = input.value.trim();
+    if (userText) {
+      addMessage(userText, "user");
+
+      try {
+        const result = await chatSession.sendMessage(
+          userText + " If the prompt contains anything other than cooking or kitchen related stuff, please respond with 'It is beyond my capabilities!'"
+        );
+        const botReply = result.response.text();
+        addMessage(botReply, "bot");
+      } catch (err) {
+        addMessage("⚠️ Error connecting to Gemini API.", "bot");
+        console.error(err);
+      }
+
+      input.value = "";
+    }
+  });
+
+  // Enter key = send
+  input.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      sendBtn.click();
+    }
+  });
+</script>
     </body>
     </html>
     

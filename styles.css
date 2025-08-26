@@ -16,6 +16,129 @@ body {
 h1, h2, h6 {
     margin: 0;
 }
+/* Make the chef image a floating launcher, always clickable */
+#robot {
+    position: fixed;
+    bottom: 120px;   /* instead of 20px → pushed up */
+    right: 20px;
+    width: 100px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+#robot:hover {
+    transform: scale(1.1); /* Scale effect on hover */
+}
+
+
+
+/* Ensure rotating dish overlay doesn't block clicks */
+#dish-display { z-index: 2; pointer-events: none; }
+#cart-dialog { z-index: 9000; }
+
+/* Chatbot shell */
+#chatbot {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  width: 340px;
+  height: 480px;
+  display: none;            /* hidden by default */
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid #e6e9ef;
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(2,6,23,.18);
+  overflow: hidden;
+  z-index: 10001;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+/* Header */
+#chatbot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #0f172a;     /* slate-900 */
+  color: #fff;
+  font-weight: 600;
+}
+#close-chatbot {
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: .85;
+}
+#close-chatbot:hover { opacity: 1; }
+
+/* Messages area */
+#chatbot-messages {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+  background: #f8fafc;     /* slate-50 */
+}
+
+/* Bubbles */
+.message {
+  margin: 8px 0;
+  padding: 10px 14px;
+  border-radius: 16px;
+  max-width: 80%;
+  line-height: 1.4;
+  font-size: 14px;
+  word-wrap: break-word;
+}
+.message.user {
+  align-self: flex-end;
+  background: #2563eb;     /* blue-600 */
+  color: #fff;
+  border-bottom-right-radius: 6px;
+}
+.message.bot {
+  align-self: flex-start;
+  background: #e9eef7;
+  color: #111827;
+  border-bottom-left-radius: 6px;
+}
+
+/* Input row — smaller input, clean */
+#chatbot-form {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid #e6e9ef;
+  background: #fff;
+}
+#chatbot-input {
+  flex: 1;
+  height: 32px;             /* fixed small height */
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid #cbd5e1;  /* slate-300 */
+  border-radius: 50px;        /* rounded look */
+  outline: none;
+}
+
+#chatbot-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .15);
+}
+#send-chat {
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+#send-chat:hover { background: #1e4fd8; }
 
 /* Floating Cart Button */
 #view-cart-button {
